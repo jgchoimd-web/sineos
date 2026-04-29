@@ -40,4 +40,7 @@ U0 StartUpTasks()
 
 StartUpTasks;
 
+if (FileFind("::/Home/Erythros/Boot.ZC"))
+	ExeFile("::/Home/Erythros/Boot.ZC");
+
 "\n%s\n\n", sys_os_version_nice;

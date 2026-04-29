@@ -1,27 +1,25 @@
 Cd(__DIR__);;
-#include "Utilities/Net.HH"
 
-#include "Utilities/NetLog"
+Option(OPTf_WARN_PAREN, OFF);
+Option(OPTf_WARN_DUP_TYPES, OFF);
 
-#include "Utilities/NetQueue"
+U8 *SNAILNET_NATIVE_DRIVER = "PCNet";
 
-#include "Drivers/Run"
+#include "NetFifo"
 
-#include "Protocols/Ethernet"
+#include "Drivers/PCNet"
 
-#include "Protocols/ARP"
-#include "Protocols/IPV4"
-#include "Protocols/ICMP"
+#include "NativeSocket"
 
-#include "Protocols/Sockets"
+#include "Ethernet"
+#include "Arp"
+#include "IPv4"
+#include "Icmp"
+#include "Tcp"
+#include "Udp"
+#include "Dns"
+#include "Netcfg"
+#include "NetHandlerTask"
 
-#include "Utilities/BST"
-#include "Protocols/UDP/MakeUDP"
-#include "Protocols/DNS"
-#include "Utilities/Ping"
-
-#include "Protocols/TCP/MakeTCP"
-
-#include "Protocols/DHCP"
-
-#include "Utilities/NetHandler" // needs IPV4, UDP, ICMP
+Option(OPTf_WARN_PAREN, ON);
+Option(OPTf_WARN_DUP_TYPES, ON);

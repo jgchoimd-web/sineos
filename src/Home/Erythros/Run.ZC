@@ -1,0 +1,75 @@
+#include "::/Home/Erythros/System/Drivers/HDAudio";
+#include "::/Home/Erythros/System/Drivers/VMSVGA";
+
+#include "::/Home/Erythros/System/Fonts/Console";
+#include "::/Home/Erythros/System/Fonts/WinTitle";
+#include "::/Home/Erythros/System/Fonts/Smol";
+#include "::/Home/Erythros/System/Fonts/Terminus";
+
+#include "::/Home/Erythros/System/Libraries/Misc";
+#include "::/Home/Erythros/System/Libraries/FileIO";
+#include "::/Home/Erythros/System/Libraries/FileRaw";
+#include "::/Home/Erythros/System/Libraries/Display";
+#include "::/Home/Erythros/System/Libraries/Mouse";
+#include "::/Home/Erythros/System/Libraries/Graphics2D";
+#include "::/Home/Erythros/System/Libraries/TrueType";
+//#include "System/Libraries/JPEG";
+#include "::/Home/Erythros/System/Libraries/uPNG";
+#include "::/Home/Erythros/System/Libraries/MD5";
+#include "::/Home/Erythros/System/Libraries/GUI";
+
+#include "::/Home/Erythros/System/Libraries/User";
+#include "::/Home/Erythros/System/Libraries/Services";
+
+#include "::/Home/Erythros/System/Programs/Tools/Terminal.exec/FixedWidthFont.ZC";
+#include "::/Home/Erythros/System/Programs/Tools/Terminal.exec/Console.ZC";
+#include "::/Home/Erythros/System/Libraries/JUnzip";
+
+#include "::/Home/Net/Start";
+
+#include "::/Home/Erythros/System/Drivers/VBoxGuest";
+
+#include "::/Home/Erythros/System/WindowManager";
+#include "::/Home/Erythros/System/Programs/Tools/Terminal.exec/ShellCommands.ZC";
+#include "::/Home/Erythros/System/Programs/Tools/Terminal.exec/Shell.ZC";
+
+#include "::/Home/Erythros/System/Libraries/Debugger";
+
+#include "::/Home/Erythros/System/Libraries/Speech/Reciter";
+#include "::/Home/Erythros/System/Libraries/Speech/SAM";
+
+#include "::/Home/Erythros/System/Services/FTP.exec/Run.ZC";
+#include "::/Home/Erythros/System/Services/Telnet.exec/Run.ZC";
+
+// Zero all TOS Kernel callbacks for CTRL-ALT shortcuts
+MemSet(keydev.fp_ctrl_alt_cbs, 0, 0xD0);
+
+// Initialize the display
+VMSVGA_Start(display.width, display.height, display.bpp);
+SysFrameBufferInit;
+
+// Clear the linear framebuffer
+Fill2D(sys_fb);
+
+// Set the wallpaper
+/*
+EContext2D *test_wp = LoadPNG("System/Media/Wallpapers/Shiori.png");
+EWMSetWallpaper(test_wp);
+DelContext2D(test_wp);
+*/
+
+// Test session info
+wmgr->session->id = 0;
+wmgr->session->user = eos_users[wmgr->session->id].name;
+wmgr->session->fullname = eos_users[wmgr->session->id].fullname;
+wmgr->session->hostname = "erythros-vm";
+
+// Register System Services
+EOSRegisterService("ftp", &FTPSvc,,&FTPSvcShutdown);
+EOSEnableService("ftp");
+
+EOSRegisterService("telnet", &TelnetSvc,,&TelnetSvcShutdown);
+EOSEnableService("telnet");
+
+// Start the window manager
+wmgr->task = Spawn(&EWMTask,,,mp_cnt-2);
